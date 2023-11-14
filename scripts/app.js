@@ -17,3 +17,46 @@ let secretWord = document.getElementById("secretWord");
 let wrongGuesses = document.getElementById("wrongGuesses");
 let hangMan = document.getElementById("hangMan");
 let userInput = document.getElementById("userInput");
+
+// Variables
+// randomword will be for our API call
+// wrongGuess will be user's incorrect input
+// displayedWord will be for their correct input
+let randomWord = "";
+let wrongGuess = "";
+let displayedWord = [];
+let guesses = 0;
+let maxGuesses = 5;
+
+startBtn.addEventListener('click', function(e){
+    // We will call our API function
+    ApiCall();
+});
+
+function ApiCall(){
+    // initiate the fetch request from out random word api
+    fetch('https://random-word-api.herokuapp.com/word')
+        .then((response) => {
+            return response.json();
+    })
+        .then((data) => {
+            console.log(data[0]);
+            StartGame(data[0]);
+    })
+}
+
+function StartGame(word){
+    randomWord = word;
+    // now we have to change our displayed to have _ for the length of our random word
+
+    for(let i = 0; i < randomWord.length; i++){
+        displayedWord[i] = "_";
+    }
+    // We will update our "game state"
+    UpdateGameState();
+}
+
+function UpdateGameState(){
+    secretWord.textContent = displayedWord.join(" ");
+    hangMan.textContent = `Guesses left ${guesses} / ${maxGuesses}`;
+}
